@@ -3,7 +3,7 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://sanpedroplasticos.com',
+  site: 'https://www.xyntiq.com',
   output: 'static',
   integrations: [
     tailwind({

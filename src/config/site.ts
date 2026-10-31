@@ -20,7 +20,7 @@ export const SITE_CONFIG = {
   ciudad: '[Ciudad]',
   pais: '[País]',
   horarios: 'Lunes a Viernes de [08:00 a 17:00 hs] | Sábados de [08:00 a 12:00 hs]',
-  urlSitio: 'https://sanpedroplasticos.com',
+  urlSitio: 'https://www.xyntiq.com',
   imagenOG: '/og-image.png',
   redesSociales: {
     instagram: '',

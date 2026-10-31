@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sanpedroplasticos.com/sitemap-index.xml
+Sitemap: https://www.xyntiq.com/sitemap-index.xml
 
