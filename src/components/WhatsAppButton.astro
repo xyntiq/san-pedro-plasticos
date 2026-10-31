@@ -1,0 +1,128 @@
+---
+import { SITE_CONFIG } from '../config/site';
+import {
+  buildWhatsAppUrl,
+  getGeneralWhatsAppMessage,
+  getProductWhatsAppMessage,
+  getWholesaleWhatsAppMessage,
+} from '../utils/whatsapp';
+
+interface Props {
+  label?: string;
+  message?: string;
+  preset?: 'general' | 'mayorista' | 'producto';
+  productName?: string;
+  productSku?: string;
+  productDetailed?: boolean;
+  location?: 'floating' | 'card' | 'hero' | 'contacto' | 'header' | 'ficha';
+  variant?: 'whatsapp' | 'primary' | 'secondary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
+  phone?: string;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const {
+  label = 'Cotizar por WhatsApp',
+  message,
+  preset = 'general',
+  productName,
+  productSku,
+  productDetailed = true,
+  location = 'card',
+  variant = 'whatsapp',
+  size = 'md',
+  fullWidth = false,
+  phone = SITE_CONFIG.whatsapp,
+  ariaLabel,
+  class: className = '',
+} = Astro.props;
+
+let finalMessage = message;
+if (!finalMessage) {
+  if (preset === 'producto' && productName && productSku) {
+    finalMessage = getProductWhatsAppMessage({
+      nombre: productName,
+      sku: productSku,
+      detallado: productDetailed,
+    });
+  } else if (preset === 'mayorista') {
+    finalMessage = getWholesaleWhatsAppMessage();
+  } else {
+    finalMessage = getGeneralWhatsAppMessage();
+  }
+}
+
+const url = buildWhatsAppUrl(finalMessage, phone);
+const computedAriaLabel =
+  ariaLabel ||
+  (productName
+    ? `Consultar por WhatsApp sobre ${productName} (SKU ${productSku})`
+    : `${label} - ${SITE_CONFIG.nombreEmpresa}`);
+
+const sizeClasses: Record<NonNullable<Props['size']>, string> = {
+  sm: 'px-3.5 py-2 text-xs sm:text-sm',
+  md: 'px-5 py-3 text-sm sm:text-base',
+  lg: 'px-7 py-4 text-base sm:text-lg',
+};
+
+const variantClasses: Record<NonNullable<Props['variant']>, string> = {
+  whatsapp: 'bg-[#1FAF54] hover:bg-[#199947] text-white shadow-md hover:-translate-y-0.5',
+  primary:
+    'bg-cta-gradient text-white shadow-cta hover:brightness-105 hover:-translate-y-0.5',
+  secondary:
+    'bg-brand-primary hover:bg-brand-secondary text-white shadow-soft hover:-translate-y-0.5',
+  ghost:
+    'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200',
+};
+---
+
+{
+  location === 'floating' ? (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={computedAriaLabel}
+      class="fixed bottom-5 right-5 z-50 group flex items-center gap-3 rounded-full bg-[#1FAF54] px-4 py-3.5 text-white shadow-xl ring-4 ring-white/80 transition-all duration-300 hover:bg-[#199947] hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1FAF54]"
+    >
+      <span class="relative flex h-6 w-6 items-center justify-center">
+        <svg
+          class="h-6 w-6 fill-current"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.625.846 5.059 2.284 7.033l-1.492 5.447 5.587-1.466c1.912 1.258 4.198 1.986 6.621 1.986 6.627 0 12-5.373 12-12s-5.373-12-12-12z" />
+        </svg>
+      </span>
+      <span class="hidden sm:inline-block font-display text-sm font-bold tracking-tight pr-1">
+        {label}
+      </span>
+    </a>
+  ) : (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={computedAriaLabel}
+      class:list={[
+        'inline-flex items-center justify-center gap-2 font-display font-semibold rounded-xl transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.99]',
+        sizeClasses[size],
+        variantClasses[variant],
+        fullWidth ? 'w-full' : '',
+        className,
+      ]}
+    >
+      <svg
+        class="h-5 w-5 shrink-0 fill-current"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.625.846 5.059 2.284 7.033l-1.492 5.447 5.587-1.466c1.912 1.258 4.198 1.986 6.621 1.986 6.627 0 12-5.373 12-12s-5.373-12-12-12z" />
+      </svg>
+      <span>{label}</span>
+    </a>
+  )
+}
+

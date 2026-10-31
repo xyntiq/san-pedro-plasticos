@@ -1,0 +1,67 @@
+---
+import Container from './Container.astro';
+import Button from './Button.astro';
+import WhatsAppButton from './WhatsAppButton.astro';
+import Reveal from './Reveal.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+}
+
+const {
+  title = '¿Querés cotizar productos plásticos para tu negocio?',
+  description = 'Contanos qué producto necesitás y la cantidad aproximada. Te respondemos rápido con disponibilidad, colores en stock y opciones comerciales.',
+  secondaryHref = '/catalogo',
+  secondaryLabel = 'Ver catálogo',
+} = Astro.props;
+---
+
+<section class="py-14 sm:py-20">
+  <Container>
+    <Reveal>
+      <div class="relative overflow-hidden rounded-3xl bg-hero-gradient px-6 py-12 sm:px-12 sm:py-16 lg:px-16 text-white shadow-elevated">
+        <!-- Patrón decorativo -->
+        <div
+          class="pointer-events-none absolute inset-0 bg-industrial-grid bg-[size:36px_36px] opacity-50"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute -right-20 -bottom-20 h-72 w-72 rounded-full bg-brand-accent/25 blur-3xl"
+          aria-hidden="true"
+        ></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div class="max-w-2xl space-y-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-white/15 border border-white/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-white">
+              <span class="h-2 w-2 rounded-full bg-brand-accent" aria-hidden="true"></span>
+              Atención comercial directa
+            </span>
+            <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
+              {title}
+            </h2>
+            <p class="text-slate-200 text-base sm:text-lg leading-relaxed">
+              {description}
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row w-full lg:w-auto items-stretch sm:items-center gap-3.5 shrink-0">
+            <WhatsAppButton
+              label="Cotizar por WhatsApp"
+              preset="mayorista"
+              location="contacto"
+              variant="primary"
+              size="lg"
+            />
+            <Button href={secondaryHref} variant="outline-light" size="lg">
+              {secondaryLabel}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Reveal>
+  </Container>
+</section>
+

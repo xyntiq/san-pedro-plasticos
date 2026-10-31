@@ -1,0 +1,69 @@
+---
+import Container from './Container.astro';
+import SectionHeading from './SectionHeading.astro';
+import Reveal from './Reveal.astro';
+import { SITE_CONFIG } from '../config/site';
+
+const pilaresConfianza = [
+  'Atención directa de fábrica',
+  'Pedidos por cantidad y bulto cerrado',
+  'Catálogo actualizable según demanda',
+  'Productos rentables para reventa',
+];
+---
+
+<section class="py-16 sm:py-20 bg-white border-y border-brand-border/80">
+  <Container>
+    <Reveal>
+      <SectionHeading
+        eyebrow="Respaldo industrial y comercial"
+        title="Confianza y capacidad para abastecer tu negocio"
+        description="Trabajamos con foco en la utilidad real del producto, el cumplimiento en cada pedido y una relación comercial transparente."
+      />
+    </Reveal>
+
+    <!-- Métricas con placeholders editables (sin inventar cifras falsas) -->
+    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        SITE_CONFIG.metricasEditables.map((metrica, index) => (
+          <Reveal delay={index * 80}>
+            <div class="h-full rounded-2xl bg-brand-bg/80 p-6 border border-brand-border flex flex-col justify-between">
+              <div>
+                <p class="font-mono text-2xl sm:text-3xl font-extrabold text-brand-primary tracking-tight">
+                  {metrica.valor}
+                </p>
+                <h3 class="mt-2 font-display text-base font-bold text-brand-text">
+                  {metrica.etiqueta}
+                </h3>
+              </div>
+              <p class="mt-2 text-xs sm:text-sm text-brand-muted leading-relaxed">
+                {metrica.detalle}
+              </p>
+            </div>
+          </Reveal>
+        ))
+      }
+    </div>
+
+    <!-- Pilares comerciales -->
+    <Reveal delay={200}>
+      <div class="mt-8 rounded-2xl bg-brand-primary/5 border border-brand-primary/15 p-5 sm:p-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {
+            pilaresConfianza.map((pilar) => (
+              <div class="flex items-center gap-2.5 text-sm font-semibold text-brand-primary">
+                <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-secondary text-white">
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span>{pilar}</span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </Reveal>
+  </Container>
+</section>
+

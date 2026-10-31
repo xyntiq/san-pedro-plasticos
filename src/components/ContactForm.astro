@@ -1,0 +1,253 @@
+---
+import { SITE_CONFIG } from '../config/site';
+import { getAllProducts } from '../utils/products';
+
+const productos = await getAllProducts();
+---
+
+<div class="rounded-3xl bg-white p-6 sm:p-8 lg:p-10 border border-brand-border shadow-card">
+  <div class="mb-6">
+    <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-secondary/10 px-3 py-1 text-xs font-bold text-brand-primary">
+      Cotización rápida sin compromiso
+    </span>
+    <h2 class="mt-2 font-display text-2xl sm:text-3xl font-extrabold text-brand-text">
+      Armá tu consulta comercial
+    </h2>
+    <p class="mt-1.5 text-sm text-brand-muted">
+      Completá los datos de tu pedido y al enviar se abrirá WhatsApp con tu solicitud lista para atención prioritaria.
+    </p>
+  </div>
+
+  <form
+    id="quote-contact-form"
+    data-whatsapp={SITE_CONFIG.whatsapp}
+    class="space-y-5"
+    novalidate
+  >
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <!-- Nombre -->
+      <div>
+        <label for="nombre" class="block text-sm font-semibold text-brand-text mb-1.5">
+          Nombre y apellido <span class="text-brand-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          required
+          autocomplete="name"
+          placeholder="Ej: Martín Gómez"
+          class="w-full rounded-xl border border-brand-border bg-brand-bg/50 px-4 py-3 text-sm text-brand-text placeholder:text-brand-muted/70 focus:border-brand-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-secondary/20"
+        />
+        <p class="mt-1 hidden text-xs font-medium text-red-600" data-error="nombre">
+          Por favor ingresá tu nombre.
+        </p>
+      </div>
+
+      <!-- Empresa o Comercio -->
+      <div>
+        <label for="empresa" class="block text-sm font-semibold text-brand-text mb-1.5">
+          Empresa, comercio o rubro <span class="text-brand-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="empresa"
+          name="empresa"
+          required
+          autocomplete="organization"
+          placeholder="Ej: Bazar Central / Mayorista"
+          class="w-full rounded-xl border border-brand-border bg-brand-bg/50 px-4 py-3 text-sm text-brand-text placeholder:text-brand-muted/70 focus:border-brand-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-secondary/20"
+        />
+        <p class="mt-1 hidden text-xs font-medium text-red-600" data-error="empresa">
+          Indicá el nombre de tu comercio, empresa o si sos consumidor final.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <!-- Teléfono -->
+      <div>
+        <label for="telefono" class="block text-sm font-semibold text-brand-text mb-1.5">
+          Teléfono / WhatsApp <span class="text-brand-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="tel"
+          id="telefono"
+          name="telefono"
+          required
+          autocomplete="tel"
+          placeholder="Ej: 11 2345 6789"
+          class="w-full rounded-xl border border-brand-border bg-brand-bg/50 px-4 py-3 text-sm text-brand-text placeholder:text-brand-muted/70 focus:border-brand-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-secondary/20"
+        />
+        <p class="mt-1 hidden text-xs font-medium text-red-600" data-error="telefono">
+          Ingresá un teléfono de contacto válido.
+        </p>
+      </div>
+
+      <!-- Email opcional -->
+      <div>
+        <label for="email" class="block text-sm font-semibold text-brand-text mb-1.5">
+          Email <span class="text-xs font-normal text-brand-muted">(opcional)</span>
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          placeholder="tu@correo.com"
+          class="w-full rounded-xl border border-brand-border bg-brand-bg/50 px-4 py-3 text-sm text-brand-text placeholder:text-brand-muted/70 focus:border-brand-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-secondary/20"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <!-- Producto de interés -->
+      <div>
+        <label for="producto" class="block text-sm font-semibold text-brand-text mb-1.5">
+          Producto de interés <span class="text-brand-accent" aria-hidden="true">*</span>
+        </label>
+        <select
+          id="producto"
+          name="producto"
+          required
+          class="w-full rounded-xl border border-brand-border bg-brand-bg/50 px-4 py-3 text-sm text-brand-text focus:border-brand-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-secondary/20"
+        >
+          <option value="">Seleccionar producto o línea...</option>
+          {
+            productos.map((p) => (
+              <option value={`${p.data.nombre} (${p.data.sku})`}>
+                {p.data.nombre} — {p.data.sku}
+              </option>
+            ))
+          }
+          <option value="Catálogo completo / Varios productos">
+            Varios productos del catálogo
+          </option>
+          <option value="Pedido especial por volumen">
+            Pedido especial por volumen
+          </option>
+        </select>
+        <p class="mt-1 hidden text-xs font-medium text-red-600" data-error="producto">
+          Seleccioná un producto de interés.
+        </p>
+      </div>
+
+      <!-- Cantidad aproximada -->
+      <div>
+        <label for="cantidad" class="block text-sm font-semibold text-brand-text mb-1.5">
+          Cantidad aproximada <span class="text-brand-accent" aria-hidden="true">*</span>
+        </label>
+        <input
+          type="text"
+          id="cantidad"
+          name="cantidad"
+          required
+          placeholder="Ej: 10 bultos / 500 unidades / Consultar mínimo"
+          class="w-full rounded-xl border border-brand-border bg-brand-bg/50 px-4 py-3 text-sm text-brand-text placeholder:text-brand-muted/70 focus:border-brand-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-secondary/20"
+        />
+        <p class="mt-1 hidden text-xs font-medium text-red-600" data-error="cantidad">
+          Indicá una cantidad estimada o escribí "Consultar mínimo".
+        </p>
+      </div>
+    </div>
+
+    <!-- Mensaje -->
+    <div>
+      <label for="mensaje" class="block text-sm font-semibold text-brand-text mb-1.5">
+        Comentarios adicionales o colores buscados
+      </label>
+      <textarea
+        id="mensaje"
+        name="mensaje"
+        rows="3"
+        placeholder="Contanos si buscás algún color en particular, zona de entrega o cualquier duda..."
+        class="w-full rounded-xl border border-brand-border bg-brand-bg/50 px-4 py-3 text-sm text-brand-text placeholder:text-brand-muted/70 focus:border-brand-secondary focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-secondary/20"
+      ></textarea>
+    </div>
+
+    <!-- Mensaje de éxito -->
+    <div
+      id="form-success-msg"
+      role="status"
+      aria-live="polite"
+      class="hidden rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-sm text-emerald-900"
+    >
+      <p class="font-bold">¡Solicitud preparada con éxito!</p>
+      <p class="mt-0.5 text-xs sm:text-sm">
+        Se abrió WhatsApp con el resumen de tu cotización. Si no se abrió automáticamente, hacé clic en el botón de WhatsApp directo.
+      </p>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full inline-flex items-center justify-center gap-2.5 rounded-xl bg-cta-gradient px-6 py-4 font-display text-base font-bold text-white shadow-cta transition-all duration-200 hover:brightness-105 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent"
+    >
+      <svg class="h-5 w-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.625.846 5.059 2.284 7.033l-1.492 5.447 5.587-1.466c1.912 1.258 4.198 1.986 6.621 1.986 6.627 0 12-5.373 12-12s-5.373-12-12-12z" />
+      </svg>
+      <span>Enviar cotización por WhatsApp</span>
+    </button>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('quote-contact-form') as HTMLFormElement | null;
+  const successMsg = document.getElementById('form-success-msg');
+
+  if (form) {
+    const requiredFields = ['nombre', 'empresa', 'telefono', 'producto', 'cantidad'];
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+
+      requiredFields.forEach((fieldName) => {
+        const input = form.elements.namedItem(fieldName) as
+          | HTMLInputElement
+          | HTMLSelectElement
+          | null;
+        const errorEl = form.querySelector(`[data-error="${fieldName}"]`);
+
+        if (!input || !input.value.trim()) {
+          isValid = false;
+          input?.classList.add('border-red-500');
+          input?.setAttribute('aria-invalid', 'true');
+          errorEl?.classList.remove('hidden');
+        } else {
+          input.classList.remove('border-red-500');
+          input.removeAttribute('aria-invalid');
+          errorEl?.classList.add('hidden');
+        }
+      });
+
+      if (!isValid) return;
+
+      const formData = new FormData(form);
+      const nombre = String(formData.get('nombre') || '').trim();
+      const empresa = String(formData.get('empresa') || '').trim();
+      const telefono = String(formData.get('telefono') || '').trim();
+      const email = String(formData.get('email') || '').trim();
+      const producto = String(formData.get('producto') || '').trim();
+      const cantidad = String(formData.get('cantidad') || '').trim();
+      const mensaje = String(formData.get('mensaje') || '').trim();
+
+      const lines = [
+        'Hola San Pedro Plásticos, quiero solicitar una cotización:',
+        `• Nombre: ${nombre}`,
+        `• Comercio/Empresa: ${empresa}`,
+        `• Teléfono: ${telefono}`,
+        email ? `• Email: ${email}` : '',
+        `• Producto: ${producto}`,
+        `• Cantidad estimada: ${cantidad}`,
+        mensaje ? `• Comentarios: ${mensaje}` : '',
+      ].filter(Boolean);
+
+      const rawPhone = (form.dataset.whatsapp || '').replace(/[^\d]/g, '');
+      const waUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(lines.join('\n'))}`;
+
+      successMsg?.classList.remove('hidden');
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    });
+  }
+</script>
+

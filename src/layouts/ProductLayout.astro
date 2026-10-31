@@ -1,0 +1,69 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { ProductoEntry } from '../utils/products';
+import { SITE_CONFIG } from '../config/site';
+import { buildCanonicalUrl, getBreadcrumbSchema } from '../utils/seo';
+import { CATEGORY_LABELS, STOCK_CONFIG } from '../utils/slug';
+
+interface Props {
+  product: ProductoEntry;
+}
+
+const { product } = Astro.props;
+const {
+  slug,
+  nombre,
+  categoria,
+  descripcionCorta,
+  seoTitle,
+  seoDescription,
+  sku,
+  imagenes,
+  stock,
+  especificaciones,
+} = product.data;
+
+const categoryLabel = CATEGORY_LABELS[categoria];
+const productUrl = buildCanonicalUrl(`/producto/${slug}`);
+const mainImageSrc = imagenes[0].src;
+
+const breadcrumbItems = [
+  { name: 'Inicio', url: '/' },
+  { name: 'Catálogo', url: '/catalogo' },
+  { name: categoryLabel, url: `/categoria/${categoria}` },
+  { name: nombre, url: `/producto/${slug}` },
+];
+
+const productSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: nombre,
+  sku,
+  description: descripcionCorta,
+  image: [buildCanonicalUrl(mainImageSrc)],
+  category: categoryLabel,
+  material: especificaciones.material,
+  brand: {
+    '@type': 'Brand',
+    name: SITE_CONFIG.nombreEmpresa,
+  },
+  manufacturer: {
+    '@type': 'Organization',
+    name: SITE_CONFIG.nombreEmpresa,
+  },
+  availability: STOCK_CONFIG[stock].schemaUrl,
+  url: productUrl,
+};
+---
+
+<BaseLayout
+  title={seoTitle}
+  description={seoDescription}
+  canonical={productUrl}
+  ogImage={mainImageSrc}
+  ogType="product"
+  schemas={[getBreadcrumbSchema(breadcrumbItems), productSchema]}
+>
+  <slot />
+</BaseLayout>
+

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" fill="none">
+  <rect x="2" y="4" width="40" height="40" rx="10" fill="url(#sp_grad)" />
+  <path d="M14 27.5L22 14.5L30 27.5H14Z" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M12 32.5H32" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="22" cy="11.5" r="2.2" fill="#FF8C42"/>
+  <text x="52" y="23" font-family="Plus Jakarta Sans, system-ui, sans-serif" font-weight="800" font-size="17" fill="#0A4D68" letter-spacing="-0.02em">SAN PEDRO</text>
+  <text x="52" y="38" font-family="Space Grotesk, system-ui, sans-serif" font-weight="700" font-size="11" fill="#088395" letter-spacing="0.18em">PLÁSTICOS</text>
+  <defs>
+    <linearGradient id="sp_grad" x1="2" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A4D68"/>
+      <stop offset="1" stop-color="#088395"/>
+    </linearGradient>
+  </defs>
+</svg>
+

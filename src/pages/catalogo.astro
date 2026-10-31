@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/Container.astro';
+import ProductCard from '../components/ProductCard.astro';
+import QuoteCTA from '../components/QuoteCTA.astro';
+import Reveal from '../components/Reveal.astro';
+import { SITE_CONFIG } from '../config/site';
+import { getAllProducts } from '../utils/products';
+
+const productos = await getAllProducts();
+---
+
+<BaseLayout
+  title="Catálogo de Productos Plásticos por Mayor y Menor | San Pedro Plásticos"
+  description="Catálogo oficial de San Pedro Plásticos: ganchos para ropa, colgadores reforzados y muñecos tipo llavero. Consultá disponibilidad y precios por cantidad."
+>
+  <!-- Hero corto de Catálogo -->
+  <section class="bg-hero-gradient text-white py-12 sm:py-16">
+    <Container>
+      <div class="max-w-3xl">
+        <span class="inline-flex items-center gap-2 rounded-full bg-white/15 border border-white/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-white mb-3">
+          <span class="h-1.5 w-1.5 rounded-full bg-brand-accent" aria-hidden="true"></span>
+          Fábrica directa · Venta mayorista y minorista
+        </span>
+        <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
+          Catálogo de productos
+        </h1>
+        <p class="mt-3 text-base sm:text-lg text-slate-200 leading-relaxed">
+          Conocé nuestras líneas de ganchos de ropa, colgadores plásticos y muñecos tipo llavero. Seleccioná el artículo que te interesa para ver sus especificaciones o cotizar directo por WhatsApp.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <!-- Controles de filtro simple y búsqueda liviana -->
+  <section class="py-12 sm:py-16">
+    <Container>
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-2xl bg-white p-4 sm:p-5 border border-brand-border shadow-card">
+        <!-- Chips de categoría -->
+        <div
+          class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0"
+          role="group"
+          aria-label="Filtrar catálogo por categoría"
+        >
+          <button
+            type="button"
+            data-filter="todos"
+            aria-pressed="true"
+            class="catalog-chip rounded-xl px-4 py-2 font-display text-xs sm:text-sm font-bold transition-all bg-brand-primary text-white shadow-soft shrink-0"
+          >
+            Todos ({productos.length})
+          </button>
+          {
+            SITE_CONFIG.categorias.map((cat) => {
+              const count = productos.filter((p) => p.data.categoria === cat.slug).length;
+              return (
+                <button
+                  type="button"
+                  data-filter={cat.slug}
+                  aria-pressed="false"
+                  class="catalog-chip rounded-xl px-4 py-2 font-display text-xs sm:text-sm font-semibold transition-all bg-brand-bg text-brand-text hover:bg-brand-secondary/15 hover:text-brand-primary shrink-0"
+                >
+                  {cat.nombreCorto} ({count})
+                </button>
+              );
+            })
+          }
+        </div>
+
+        <!-- Buscador rápido -->
+        <div class="relative w-full md:w-72">
+          <label for="catalog-search" class="sr-only">Buscar producto por nombre o SKU</label>
+          <input
+            id="catalog-search"
+            type="search"
+            placeholder="Buscar por nombre o SKU..."
+            class="w-full rounded-xl border border-brand-border bg-brand-bg/60 pl-10 pr-4 py-2.5 text-sm text-brand-text placeholder:text-brand-muted focus:border-brand-secondary focus:bg-white focus:outline-none"
+          />
+          <svg
+            class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-muted"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Links directos a páginas de categoría por SEO -->
+      <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-brand-muted px-1">
+        <span>Acceso directo por sección:</span>
+        {
+          SITE_CONFIG.categorias.map((cat) => (
+            <a
+              href={`/categoria/${cat.slug}`}
+              class="font-semibold text-brand-primary hover:text-brand-accent underline underline-offset-2"
+            >
+              Ver solo {cat.nombre}
+            </a>
+          ))
+        }
+      </div>
+
+      <!-- Grid de productos -->
+      <div
+        id="catalog-grid"
+        class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+      >
+        {
+          productos.map((product, idx) => (
+            <div
+              class="catalog-item"
+              data-category={product.data.categoria}
+              data-search={`${product.data.nombre} ${product.data.sku} ${product.data.descripcionCorta}`.toLowerCase()}
+            >
+              <Reveal delay={idx * 70}>
+                <ProductCard product={product} priority={idx < 3} />
+              </Reveal>
+            </div>
+          ))
+        }
+      </div>
+
+      <!-- Estado vacío elegante -->
+      <div
+        id="catalog-empty"
+        class="hidden mt-10 rounded-3xl bg-white p-10 text-center border border-brand-border shadow-card max-w-xl mx-auto"
+      >
+        <p class="font-display text-xl font-bold text-brand-text">
+          No encontramos productos que coincidan con tu búsqueda
+        </p>
+        <p class="mt-2 text-sm text-brand-muted">
+          Probá seleccionando "Todos" o consultanos directamente por WhatsApp si buscás un artículo plástico específico por pedido.
+        </p>
+        <button
+          id="catalog-reset"
+          type="button"
+          class="mt-5 inline-flex items-center justify-center rounded-xl bg-brand-primary px-5 py-2.5 font-display text-sm font-semibold text-white hover:bg-brand-secondary transition-colors"
+        >
+          Mostrar todos los productos
+        </button>
+      </div>
+    </Container>
+  </section>
+
+  <QuoteCTA
+    title="¿Buscás precios por bulto o cantidad mayorista?"
+    description="Escribinos indicando los productos de tu interés y te preparamos una cotización a medida en minutos."
+    secondaryHref="/contacto"
+    secondaryLabel="Ir al formulario de cotización"
+  />
+</BaseLayout>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.catalog-chip');
+  const searchInput = document.getElementById('catalog-search') as HTMLInputElement | null;
+  const items = document.querySelectorAll<HTMLElement>('.catalog-item');
+  const emptyState = document.getElementById('catalog-empty');
+  const resetBtn = document.getElementById('catalog-reset');
+
+  let activeCategory = 'todos';
+  let searchQuery = '';
+
+  function filterCatalog() {
+    let visibleCount = 0;
+
+    items.forEach((item) => {
+      const itemCat = item.dataset.category || '';
+      const itemSearch = item.dataset.search || '';
+      const matchesCat = activeCategory === 'todos' || itemCat === activeCategory;
+      const matchesSearch = !searchQuery || itemSearch.includes(searchQuery);
+
+      if (matchesCat && matchesSearch) {
+        item.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+
+    if (emptyState) {
+      emptyState.classList.toggle('hidden', visibleCount > 0);
+    }
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      activeCategory = chip.dataset.filter || 'todos';
+      chips.forEach((c) => {
+        const isCurrent = c === chip;
+        c.setAttribute('aria-pressed', String(isCurrent));
+        c.className = isCurrent
+          ? 'catalog-chip rounded-xl px-4 py-2 font-display text-xs sm:text-sm font-bold transition-all bg-brand-primary text-white shadow-soft shrink-0'
+          : 'catalog-chip rounded-xl px-4 py-2 font-display text-xs sm:text-sm font-semibold transition-all bg-brand-bg text-brand-text hover:bg-brand-secondary/15 hover:text-brand-primary shrink-0';
+      });
+      filterCatalog();
+    });
+  });
+
+  searchInput?.addEventListener('input', (e) => {
+    searchQuery = (e.target as HTMLInputElement).value.trim().toLowerCase();
+    filterCatalog();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    activeCategory = 'todos';
+    searchQuery = '';
+    if (searchInput) searchInput.value = '';
+    chips[0]?.click();
+  });
+</script>
+

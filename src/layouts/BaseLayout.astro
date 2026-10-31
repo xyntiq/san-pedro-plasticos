@@ -1,0 +1,142 @@
+---
+import '../styles/globals.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { SITE_CONFIG } from '../config/site';
+import {
+  buildCanonicalUrl,
+  getOrganizationSchema,
+  getWebSiteSchema,
+} from '../utils/seo';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'product';
+  noindex?: boolean;
+  schemas?: Record<string, unknown>[];
+}
+
+const {
+  title = `${SITE_CONFIG.nombreEmpresa} | Fábrica de Ganchos, Colgadores y Productos Plásticos`,
+  description = SITE_CONFIG.descripcion,
+  canonical,
+  ogImage = SITE_CONFIG.imagenOG,
+  ogType = 'website',
+  noindex = false,
+  schemas = [],
+} = Astro.props;
+
+const canonicalUrl = canonical || buildCanonicalUrl(Astro.url.pathname);
+const absoluteOgImage = ogImage.startsWith('http')
+  ? ogImage
+  : buildCanonicalUrl(ogImage);
+
+const allSchemas = [getOrganizationSchema(), getWebSiteSchema(), ...schemas];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Principal -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content={SITE_CONFIG.nombreEmpresa} />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={absoluteOgImage} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+
+    <!-- Tipografías optimizadas con display=swap -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Datos estructurados JSON-LD -->
+    {
+      allSchemas.map((schemaObj) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(schemaObj)}
+        />
+      ))
+    }
+  </head>
+  <body class="min-h-screen flex flex-col bg-brand-bg text-brand-text selection:bg-brand-secondary selection:text-white">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-xl focus:bg-brand-primary focus:px-4 focus:py-2.5 focus:text-sm focus:font-bold focus:text-white focus:shadow-lg"
+    >
+      Saltar al contenido principal
+    </a>
+
+    <Header />
+
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <!-- Botón flotante de WhatsApp -->
+    <WhatsAppButton
+      label="Consultar por WhatsApp"
+      preset="general"
+      location="floating"
+    />
+
+    <!-- Intersection Observer liviano para animaciones de entrada -->
+    <script>
+      const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+      const revealElements = document.querySelectorAll('[data-reveal]');
+
+      if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+        revealElements.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                obs.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px',
+          }
+        );
+
+        revealElements.forEach((el) => observer.observe(el));
+      }
+    </script>
+  </body>
+</html>
+

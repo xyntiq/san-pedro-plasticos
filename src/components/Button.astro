@@ -1,0 +1,68 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'whatsapp' | 'outline-light';
+  size?: 'sm' | 'md' | 'lg';
+  type?: 'button' | 'submit' | 'reset';
+  target?: string;
+  rel?: string;
+  ariaLabel?: string;
+  class?: string;
+  fullWidth?: boolean;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  target,
+  rel,
+  ariaLabel,
+  class: className = '',
+  fullWidth = false,
+} = Astro.props;
+
+const baseClasses =
+  'inline-flex items-center justify-center gap-2.5 font-display font-semibold rounded-xl transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-[0.99]';
+
+const sizeClasses: Record<NonNullable<Props['size']>, string> = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-5 py-3 text-sm sm:text-base',
+  lg: 'px-7 py-4 text-base sm:text-lg',
+};
+
+const variantClasses: Record<NonNullable<Props['variant']>, string> = {
+  primary:
+    'bg-cta-gradient text-white shadow-cta hover:brightness-105 hover:-translate-y-0.5 focus-visible:outline-brand-accent',
+  secondary:
+    'bg-brand-primary text-white shadow-soft hover:bg-brand-secondary hover:-translate-y-0.5 focus-visible:outline-brand-primary',
+  ghost:
+    'bg-white text-brand-primary border border-brand-border hover:border-brand-secondary/50 hover:bg-brand-bg focus-visible:outline-brand-secondary',
+  whatsapp:
+    'bg-[#1FAF54] text-white shadow-md hover:bg-[#199947] hover:-translate-y-0.5 focus-visible:outline-[#1FAF54]',
+  'outline-light':
+    'bg-white/10 text-white border border-white/25 backdrop-blur-sm hover:bg-white/20 hover:border-white/40 focus-visible:outline-white',
+};
+
+const classes = [
+  baseClasses,
+  sizeClasses[size],
+  variantClasses[variant],
+  fullWidth ? 'w-full' : '',
+  className,
+].join(' ');
+---
+
+{
+  href ? (
+    <a href={href} target={target} rel={rel} aria-label={ariaLabel} class={classes}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} aria-label={ariaLabel} class={classes}>
+      <slot />
+    </button>
+  )
+}
+
