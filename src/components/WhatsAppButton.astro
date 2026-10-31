@@ -1,5 +1,5 @@
 ---
-import { SITE_CONFIG } from '../config/site';
+import { SITE_CONFIG, WHATSAPP_NUMBER } from '../config/site';
 import {
   buildWhatsAppUrl,
   getGeneralWhatsAppMessage,
@@ -34,7 +34,7 @@ const {
   variant = 'whatsapp',
   size = 'md',
   fullWidth = false,
-  phone = SITE_CONFIG.whatsapp,
+  phone = WHATSAPP_NUMBER,
   ariaLabel,
   class: className = '',
 } = Astro.props;

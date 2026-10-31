@@ -20,8 +20,10 @@ export function getOrganizationSchema() {
     logo: `${SITE_CONFIG.urlSitio}/favicon.svg`,
     description: SITE_CONFIG.descripcion,
     email: SITE_CONFIG.email,
+    telephone: SITE_CONFIG.telefonoHref,
     contactPoint: {
       '@type': 'ContactPoint',
+      telephone: SITE_CONFIG.telefonoHref,
       contactType: 'sales',
       availableLanguage: ['Spanish'],
     },

@@ -5,6 +5,9 @@ import ContactForm from '../components/ContactForm.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import Reveal from '../components/Reveal.astro';
 import { SITE_CONFIG } from '../config/site';
+import { buildWhatsAppUrl, getGeneralWhatsAppMessage } from '../utils/whatsapp';
+
+const waDirectUrl = buildWhatsAppUrl(getGeneralWhatsAppMessage());
 ---
 
 <BaseLayout
@@ -75,7 +78,23 @@ import { SITE_CONFIG } from '../config/site';
                   </div>
                   <div>
                     <p class="font-semibold text-brand-text">Teléfono / WhatsApp</p>
-                    <p class="text-brand-muted mt-0.5">{SITE_CONFIG.telefono} · {SITE_CONFIG.whatsappDisplay}</p>
+                    <p class="text-brand-muted mt-0.5 flex flex-wrap items-center gap-2">
+                      <a
+                        href={`tel:${SITE_CONFIG.telefonoHref}`}
+                        class="font-medium text-brand-primary hover:underline"
+                      >
+                        {SITE_CONFIG.whatsappDisplay}
+                      </a>
+                      <span aria-hidden="true">·</span>
+                      <a
+                        href={waDirectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="font-medium text-brand-secondary hover:underline"
+                      >
+                        Escribir por WhatsApp
+                      </a>
+                    </p>
                   </div>
                 </li>
 

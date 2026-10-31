@@ -6,15 +6,20 @@ export interface CategoryInfo {
   beneficioClave: string;
 }
 
+export const WHATSAPP_NUMBER = '5193043725';
+export const PHONE_DISPLAY = '+51 930 437 25';
+export const PHONE_TEL = '+5193043725';
+
 export const SITE_CONFIG = {
   nombreEmpresa: 'San Pedro Plásticos',
   eslogan: 'Fábrica directa de productos plásticos para comercios y mayoristas',
   descripcion:
     'Fábrica de productos plásticos: ganchos para ropa, colgadores, perchas plásticas y muñecos tipo llavero. Venta mayorista y minorista con atención directa por WhatsApp.',
-  telefono: '[Teléfono]',
-  // Número numérico internacional para enlace wa.me (Reemplazar con el número real sin + ni espacios)
-  whatsapp: '5491100000000',
-  whatsappDisplay: '[Teléfono WhatsApp]',
+  telefono: PHONE_DISPLAY,
+  telefonoHref: PHONE_TEL,
+  // Número numérico internacional para enlace wa.me (sin + ni espacios)
+  whatsapp: WHATSAPP_NUMBER,
+  whatsappDisplay: PHONE_DISPLAY,
   email: 'ventas@sanpedroplasticos.com',
   direccion: '[Dirección de la fábrica]',
   ciudad: '[Ciudad]',

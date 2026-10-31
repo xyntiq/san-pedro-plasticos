@@ -1,4 +1,4 @@
-import { SITE_CONFIG } from '../config/site';
+import { WHATSAPP_NUMBER } from '../config/site';
 
 export type WhatsAppMessagePreset = 'general' | 'mayorista' | 'catalogo' | 'producto';
 
@@ -29,7 +29,7 @@ export function getProductWhatsAppMessage({
 
 export function buildWhatsAppUrl(
   customMessage?: string,
-  phone: string = SITE_CONFIG.whatsapp
+  phone: string = WHATSAPP_NUMBER
 ): string {
   const cleanPhone = phone.replace(/[^\d]/g, '');
   const message = customMessage?.trim() || getGeneralWhatsAppMessage();
